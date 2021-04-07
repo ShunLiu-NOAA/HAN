@@ -18,34 +18,36 @@ def han(filename,OBSTYPE,VarName):
    gsi_observer_noqc  =f.variables[gsihofX][:]
    ufo                =f.variables[ufohofX][:]
    geopotential_height=f.variables['geopotential_height@MetaData'][:]
+   geometric_height=f.variables['geometric_height@MetaData'][:]
    gsi_observer_withqc=f.variables['radial_velocity@GsiHofXBc'][:]
    f.close()
 
    k2,p=stats.normaltest(gsi_observer_noqc)
+   print(k2,p)
+
+   k2,p=stats.ttest_ind(gsi_observer_noqc, gsi_observer_withqc)
+#  k2,p=stats.ttest_ind(geopotential_height, geometric_height)
+
+   print(len(gsi_observer_noqc))
+   print(stats.describe(gsi_observer_noqc))
+   print(stats.describe(gsi_observer_withqc))
    print("p = {:g}".format(p))
 
-   exit()
 #=========================
-   plt.rcParams.update({'font.size': 18})
 #  plt.rcParams.update({'line.linewidth': 8})
-   fig = plt.figure(figsize=(8.0,7.5))
-   ax=fig.add_subplot(111)
+   fig = plt.figure(figsize=(12.0,6))
+   plt.rcParams.update({'font.size': 6})
+   ax1=fig.add_subplot(121)
+   ax1.scatter(gsi_observer_withqc,gsi_observer_noqc, color='blue',label="rw", marker='o', s=3)
+   plt.title(thisobstype+':gsi_withqc and gsi_noqc')
 
+   ax1=fig.add_subplot(122)
+   ax1.scatter(geopotential_height,geometric_height, color='blue',label="rw", marker='o', s=3)
+   plt.title(thisobstype+':gp_height and gm_height')
 
-   plt.scatter(gsi_observer_withqc,ufo, color='blue',label="rw", marker='o', s=3)
-#  plt.scatter(gsi_observer_noqc,ufo, color='r',label="tsen", marker='o', s=3)
-
-   #box = ax.get_position()
-   #ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
-
-# Put a legend to the right of the current axis
-#  ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-
-   plt.xlabel('gsi')
-   plt.ylabel('ufo')
-   plt.title(thisobstype+':gsi and ufo hofx scatter')
-   figname='ufo_'+thisobstype+'_stage1_'+subtask+'.png'
+   figname='test.png'
    plt.savefig(figname,bbox_inches='tight',dpi=100)
+   exit()
 #=========================
 
 #=========================
