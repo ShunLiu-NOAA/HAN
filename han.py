@@ -23,27 +23,53 @@ def han(filename,OBSTYPE,VarName):
    f.close()
 
    k2,p=stats.normaltest(gsi_observer_noqc)
+   print("normaltest::")
    print(k2,p)
 
    k2,p=stats.ttest_ind(gsi_observer_noqc, gsi_observer_withqc)
-#  k2,p=stats.ttest_ind(geopotential_height, geometric_height)
+   print("two sample test gsi_observer::")
+   print(k2,p)
+   
+   k2,p=stats.ttest_ind(geopotential_height, geometric_height)
+   print("two sample test height::")
+   print(k2,p)
 
-   print(len(gsi_observer_noqc))
+   k2,p=stats.ttest_ind(ufo, gsi_observer_withqc)
+   print("two sample test ufo-gsi with QC::")
+   print(k2,p)
+
+   k2,p=stats.ttest_ind(ufo, gsi_observer_noqc)
+   print("two sample test ufo-gsi without QC::")
+   print(k2,p)
+
+#  print(stats.describe(ufo))
+#  print(stats.describe(gsi_observer_withqc))
+
+#  print(len(gsi_observer_noqc))
    print(stats.describe(gsi_observer_noqc))
    print(stats.describe(gsi_observer_withqc))
-   print("p = {:g}".format(p))
+   print(stats.describe(ufo))
+#  print("p = {:g}".format(p))
 
 #=========================
 #  plt.rcParams.update({'line.linewidth': 8})
-   fig = plt.figure(figsize=(12.0,6))
-   plt.rcParams.update({'font.size': 6})
-   ax1=fig.add_subplot(121)
-   ax1.scatter(gsi_observer_withqc,gsi_observer_noqc, color='blue',label="rw", marker='o', s=3)
-   plt.title(thisobstype+':gsi_withqc and gsi_noqc')
+   fig = plt.figure(figsize=(8,9))
+   plt.rcParams.update({'font.size': 8})
+   ax1=fig.add_subplot(221)
+   ax1.scatter(ufo,gsi_observer_withqc, color='blue',label="rw", marker='o', s=3)
+   plt.title(thisobstype+':ufo and gsi_withqc')
 
-   ax1=fig.add_subplot(122)
-   ax1.scatter(geopotential_height,geometric_height, color='blue',label="rw", marker='o', s=3)
-   plt.title(thisobstype+':gp_height and gm_height')
+   ax1=fig.add_subplot(222)
+   ax1.scatter(ufo,gsi_observer_noqc, color='blue',label="rw", marker='o', s=3)
+   plt.title(thisobstype+':ufo and gsi_noqc')
+
+   ax2=fig.add_subplot(223)
+   ax2.hist(gsi_observer_withqc,bins=50,range=(-40.00,40.00))
+   plt.title(thisobstype+':gsi_withqc')
+
+   ax2=fig.add_subplot(224)
+   ax2.hist(ufo,bins=50,range=(-40.00,40.00))
+   plt.title(thisobstype+':ufo')
 
    figname='test.png'
    plt.savefig(figname,bbox_inches='tight',dpi=100)
