@@ -5,8 +5,19 @@ import statistics
 import math
 import matplotlib.pyplot as plt
 from netCDF4 import Dataset
+import yaml
 
 def han(filename,OBSTYPE,VarName):
+
+#  stream = open("foo.yaml", 'r')
+#  yamlconfig = yaml.safe_load(stream)
+
+#  print(dictionary['doe'])
+#  for key, value in yamlconfig.items():
+#     print (key + " : " + str(value))
+
+#  print(len(yamlconfig['variables']))
+   exit()
 
    thisobstype=OBSTYPE
    thisvarname=VarName
@@ -26,19 +37,15 @@ def han(filename,OBSTYPE,VarName):
    print("normaltest::")
    print(k2,p)
 
-   k2,p=stats.ttest_ind(gsi_observer_noqc, gsi_observer_withqc)
+   k2,p=stats.ttest_rel(gsi_observer_noqc, gsi_observer_withqc)
    print("two sample test gsi_observer::")
    print(k2,p)
    
-   k2,p=stats.ttest_ind(geopotential_height, geometric_height)
-   print("two sample test height::")
-   print(k2,p)
-
-   k2,p=stats.ttest_ind(ufo, gsi_observer_withqc)
+   k2,p=stats.ttest_rel(ufo, gsi_observer_withqc)
    print("two sample test ufo-gsi with QC::")
    print(k2,p)
 
-   k2,p=stats.ttest_ind(ufo, gsi_observer_noqc)
+   k2,p=stats.ttest_rel(ufo, gsi_observer_noqc)
    print("two sample test ufo-gsi without QC::")
    print(k2,p)
 
@@ -120,13 +127,24 @@ def han(filename,OBSTYPE,VarName):
 #=====================================================================
 if __name__ == '__main__':
 
-   print("get parameters")
-   fileame=sys.argv[1]
-   OBSTYPE=sys.argv[2]
-   VarName=sys.argv[3]
-   subtask=sys.argv[4]
-
    print("start Hypothesis Analysis")
+   print("1. get config parameters")
+   stream = open("config.yaml", 'r')
+   config = yaml.safe_load(stream)
+
+#  fileame=sys.argv[1]
+#  OBSTYPE=sys.argv[2]
+#  VarName=sys.argv[3]
+#  subtask=sys.argv[4]
+
+   fileame=config['paths']['inputdir']
+   OBSTYPE=config['OBSTYPE']
+   VarName=config['VarName']
+   subtask=config['subtask']
+
+   print(fileame)
+   exit()
+
    han(fileame,OBSTYPE,VarName)
 
 
