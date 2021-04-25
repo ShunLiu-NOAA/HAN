@@ -137,7 +137,7 @@ if __name__ == '__main__':
 #  VarName=sys.argv[3]
 #  subtask=sys.argv[4]
 
-   fileame=config['paths']['inputdir']
+   fileame=config['paths']['inputdir']+'/'+config['inputfile']
    OBSTYPE=config['OBSTYPE']
    VarName=config['VarName']
    subtask=config['subtask']
